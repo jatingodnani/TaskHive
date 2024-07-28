@@ -6,6 +6,7 @@ const authuser=require("./routes/userRoutes");
 const {authenticatiionCheck}=require("./middleware/authenticationCheck");
 const cookieParser=require("cookie-parser");
 const router = require('./routes/userRoutes');
+const worktask=require("./routes/taskroute")
 
 dotenv.config();
 connectDB();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use("/auth",router)
 app.use(authenticatiionCheck("task-token"));
+app.use("/taskhive",worktask)
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');

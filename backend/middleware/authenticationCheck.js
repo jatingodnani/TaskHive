@@ -3,21 +3,24 @@ const { jwtvalidate } = require("../services/jwt.js");
 function authenticatiionCheck(cookieName) {
 
     return (req, res, next) => {
-        console.log("hii")
+      
         let token;
         if (req.cookies && req.cookies[cookieName]) {
             token = req.cookies[cookieName];
+            console.log("cookie",token)
         }
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+       
+        if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
             token = req.headers.authorization.split(' ')[1];
         }
+        console.log("tk",token)
         if (!token) {
-           throw new Error("Invalid Token");
+           throw new Error("No Token found");
         } try {
-           const userpayload = jwtvalidate(tokencookie);
-
+           const userpayload = jwtvalidate(token);
+            console.log(userpayload)
             req.user = userpayload;
-            console.log(req.user)
+           
         } catch (error) {
             throw new Error("Invalid Token");
         }

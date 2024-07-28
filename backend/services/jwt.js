@@ -1,23 +1,23 @@
-const JWT=require("jsonwebtoken");
+const JWT = require("jsonwebtoken");
 
 
 
-function createtoken(user){
-const payload={
-    id: user._id,
-    email:user.email,
-    name:user.fullName,
+function createtoken(user) {
+    const payload = {
+        id: user._id,
+        email: user.email,
+        name: user.fullname,
 
+    }
+    console.log(process.env.SECREAT)
+    const token = JWT.sign(payload, process.env.SECREAT);
+    return token;
 }
+function jwtvalidate(token) {
 
-const token=JWT.sign(payload,process.env.SECREAT);
-return token;
-}
-function jwtvalidate(token){
-   
-    const validateval=JWT.verify(token,secret);
+    const validateval = JWT.verify(token, process.env.SECREAT);
     
     return validateval
 }
 
-module.exports={createtoken,jwtvalidate}
+module.exports = { createtoken, jwtvalidate }
