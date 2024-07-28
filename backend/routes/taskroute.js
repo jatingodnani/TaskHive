@@ -4,11 +4,12 @@ const { Workspace, Task, Activity } = require('../models/workspacModal');
 
 router.post('/workspaces', async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description,members } = req.body;
     const workspace = new Workspace({
       name,
       description,
       owner:req.user.id,
+      members
     });
     await workspace.save();
     await new Activity({
@@ -32,6 +33,7 @@ router.delete('/workspaces/:id', async (req, res) => {
     if (!workspace) {
       return res.status(404).json({ message: 'Workspace not found or you are not the owner' });
       }
+
     await new Activity({
       workspace: workspace.id,
       user: req.user.id,
@@ -74,8 +76,25 @@ router.post('/tasks', async (req, res) => {
 });
 router.get('/workspaces/:workspaceId/tasks',  async (req, res) => {
   try {
-    const tasks = await Task.find({ workspace: req.params.workspaceId });
+    const tasks = await Task.find({workspace: req.params.workspaceId,
+      $or:[
+        { creator: req.user.id },
+        { assignedTo: req.user.id }
+      ]});
     res.status(200).json(tasks);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+router.get('/workspaces', async (req, res) => {
+  try {
+    const workspaces = await Workspace.find({
+      $or: [
+        { owner: req.user.id },
+        { members: req.user.id }
+      ]
+    }).populate('owner', 'name email').populate('members', 'name email');
+    res.status(200).json(workspaces);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -55,10 +55,10 @@ TaskSchema.pre('save',async  function(next){
 })
 
 const ActivitySchema = new mongoose.Schema({
-  workspace: { 
+  workspace: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Workspace', 
-    required: true 
+    ref: 'Workspace',
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId, 
