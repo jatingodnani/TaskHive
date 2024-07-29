@@ -7,10 +7,12 @@ const {authenticatiionCheck}=require("./middleware/authenticationCheck");
 const cookieParser=require("cookie-parser");
 const router = require('./routes/userRoutes');
 const worktask=require("./routes/taskroute")
+const cors=require("cors");
 
 dotenv.config();
 connectDB();
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use("/auth",router)

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-
-// Workspace Schema
 const WorkspaceSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },

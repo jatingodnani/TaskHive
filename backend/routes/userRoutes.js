@@ -1,9 +1,13 @@
 const { Router } = require('express');
 const User = require("../models/authModal.js");
+
 const router = Router();
 
 router.get('/check-auth', (req, res) => {
-    res.send('User is authenticated');
+    if (req.user) {
+        return res.json({ authenticated: true, user: req.user });
+    }
+    res.json({ authenticated: false });
 });
 
 router.post("/signup", async (req, res) => {
@@ -15,8 +19,6 @@ router.post("/signup", async (req, res) => {
             email,
             password
         });
-
-        // Return a success message or the created user
         return res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
         return res.status(500).json({ error: error.message });
