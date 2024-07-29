@@ -24,7 +24,7 @@ const Navbar = () => {
       className="bg-white text-gray-800 p-6 shadow-md"
     >
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+        <Link href="/" className="text-2xl font-bold text-purple-500 hover:text-purple-500 transition-colors">
           TaskHive
         </Link>
         <div className="flex items-center space-x-6">
@@ -61,7 +61,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               onClick={toggleUserMenu}
-              className="flex items-center space-x-3 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none transition-colors"
+              className="flex items-center space-x-3 px-4 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 focus:outline-none transition-colors"
             >
               <FaUser />
               <span>{userName}</span>

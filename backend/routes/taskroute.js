@@ -1,7 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { Workspace, Task, Activity } = require('../models/workspacModal'); 
+const User = require('../models/authModal');
+router.get("/auth-users",async(req, res, next)=>{
+  
+  try{
+    const user=await User.find();
 
+    res.status(200).json(user);
+  }catch(err){
+    res.status(err.code).json("error",err.message)
+  }
+})
 router.post('/workspaces', async (req, res) => {
   try {
     const { name, description,members } = req.body;

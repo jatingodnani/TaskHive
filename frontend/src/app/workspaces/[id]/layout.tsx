@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import Sidebar from '@/components/Sidebar';
 import Navbar from "@/components/Navbar";
 
@@ -17,18 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-        
-        
-      <body className={inter.className}>
-      <Navbar />
-      
-        {/* <Sidebar/> */}
-        <main className="bg-gray-100">
+      <div className="flex w-full">
+        <Sidebar/>
+        <main className="flex-1">
           {children}
         </main>
-     
-        </body>
-    </html>
+      </div>
+    
+ 
   );
 }
