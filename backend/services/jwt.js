@@ -16,7 +16,7 @@ function createtoken(user) {
 function jwtvalidate(token) {
 
     const validateval = JWT.verify(token, process.env.SECREAT);
-    
+    console.log("validate karo",validateval);
     return validateval
 }
 
