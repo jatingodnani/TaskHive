@@ -1,23 +1,48 @@
-"use client"
-import { useState } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaUser, FaSignOutAlt, FaBriefcase, FaCog } from 'react-icons/fa';
+import { FaChevronDown, FaUser, FaSignOutAlt, FaBriefcase } from 'react-icons/fa';
+import { useAppSelector,useAppDispatch } from '@/redux/lib/hooks';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { clearUser } from '@/redux/features/userSlice';
 
 const Navbar = () => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const userName = "John Doe"; // Replace with actual user name
-
+  const { user } = useAppSelector((state) => state.user);
+  const router = useRouter();
+  const dispatch=useAppDispatch();
   const toggleWorkspaceMenu = () => setIsWorkspaceOpen(!isWorkspaceOpen);
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
 
-  const handleLogout = () => {
-    alert('Logged out');
+  const handleLogout = async () => {
+    console.log("hii")
+    try {
+      const response = await fetch('http://localhost:8000/auth/logout', {
+        method: 'GET',
+        credentials: 'include', // Ensure cookies are sent if needed
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to log out');
+      }
+
+      const result = await response.json();
+      dispatch(clearUser())
+        toast.success('Successfully logged out');
+        // Redirect to the login page
+        router.push('/auth');
+      
+    } catch (err) {
+      toast.error('Error logging out');
+    }
   };
 
   return (
-    <motion.header 
+    <motion.header
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -64,7 +89,7 @@ const Navbar = () => {
               className="flex items-center space-x-3 px-4 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 focus:outline-none transition-colors"
             >
               <FaUser />
-              <span>{userName}</span>
+              <span>{user?.name || 'User'}</span>
               <FaChevronDown />
             </button>
             <AnimatePresence>
@@ -77,10 +102,9 @@ const Navbar = () => {
                   className="absolute right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
                 >
                   <motion.div whileHover={{ x: 5 }} className="px-4 py-3 border-b">
-                    <p className="font-semibold">{userName}</p>
-                    <p className="text-sm text-gray-600">john.doe@example.com</p>
+                    <p className="font-semibold">{user?.name}</p>
+                    <p className="text-sm text-gray-600">{user?.email}</p>
                   </motion.div>
-                  
                   <motion.button
                     whileHover={{ x: 5 }}
                     onClick={handleLogout}

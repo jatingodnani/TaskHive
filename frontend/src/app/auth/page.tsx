@@ -1,13 +1,23 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SignInForm from '../../components/Sign-in';
 import SignUpForm from '../../components/Signup';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useAppDispatch, useAppSelector } from "../../redux/lib/hooks";
+import { useRouter } from 'next/navigation';
 const Auth = () => {
     const [isSignIn, setIsSignIn] = useState(true);
-
+    const { isAuthenticated, user, loading, error } = useAppSelector(
+        (state) => state.user
+      );
+      const router=useRouter();
+      useEffect(()=>{
+        if(isAuthenticated){
+          router.push("/")
+        }
+      },[isAuthenticated,user])
+     console.log("auth",isAuthenticated)
     const toggleForm = () => {
         setIsSignIn(!isSignIn);
     };

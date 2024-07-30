@@ -5,7 +5,7 @@ const User = require('../models/authModal');
 router.get("/auth-users",async(req, res, next)=>{
   
   try{
-    const user=await User.find();
+    const user=await User.find().select("_id email fullname");
 
     res.status(200).json(user);
   }catch(err){
@@ -34,7 +34,17 @@ router.post('/workspaces', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
-
+router.get('/workspaces/:id',async (req,res)=>{
+  try{
+    const workspace=await Workspace.findById(req.params.id).populate("owner","name email").populate("members","name email");
+    if(!workspace){
+      return res.status(404).json({message:"Workspace not found"})
+    }
+    res.status(200).json(workspace);
+  }catch(err){
+    res.status(400).json({message:err.message})
+  }
+})
 router.delete('/workspaces/:id', async (req, res) => {
   console.log(req.params.id,req.user)
   try {
@@ -67,7 +77,8 @@ router.post('/tasks', async (req, res) => {
       deadline,
       workspace,
       creator: req.user.id,
-      assignedTo
+      assignedTo,
+      columns:"todo"
     });
     await task.save();
 
@@ -104,6 +115,7 @@ router.get('/workspaces', async (req, res) => {
         { members: req.user.id }
       ]
     }).populate('owner', 'name email').populate('members', 'name email');
+    console.log(req.user.id)
     res.status(200).json(workspaces);
   } catch (error) {
     res.status(400).json({ message: error.message });

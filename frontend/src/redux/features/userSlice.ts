@@ -1,7 +1,10 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
 type UserState = {
-  user: string | null;
+  user: {
+    email: string;
+    name: string;
+  } | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -15,11 +18,14 @@ const initialState: UserState = {
 };
 
 export const checkAuth = createAsyncThunk(
-  'user/checkAuth',
+  "user/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:8000/check-auth');
+      const response = await fetch("http://localhost:8000/auth/check-auth", {
+        credentials: "include",
+      });
       const data = await response.json();
+      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error);
@@ -28,7 +34,7 @@ export const checkAuth = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<string>) {
@@ -51,12 +57,13 @@ const userSlice = createSlice({
         state.isAuthenticated = action.payload.authenticated;
         state.user = action.payload.user || null;
         state.error = null;
+        console.log(state.isAuthenticated);
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
-        state.error = action.error.message || 'An error occurred';
+        state.error = action.error.message || "An error occurred";
       });
   },
 });

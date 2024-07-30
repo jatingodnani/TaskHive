@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { FaHome, FaCog, FaChartBar, FaClipboard, FaPlus, FaUser } from 'react-icons/fa';
 import Workform from './Workspacemodal.tsx';
 
-const Sidebar = () => {
+const SideCompo= () => {
   const userName = "John Doe";
 
   return (
@@ -15,7 +15,7 @@ const Sidebar = () => {
         <nav>
           <ul className="space-y-2">
             {[
-              { href:`workspaces/`, icon: FaHome, label: "Home" },
+              { href:"/board", icon: FaHome, label: "Home" },
               { href:"/board",icon: FaClipboard, label: "Board" },
               { href:"/board", icon: FaChartBar, label: "Analytics" },
               {href:"/board", icon: FaCog, label: "Settings" },
@@ -43,4 +43,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideCompo;

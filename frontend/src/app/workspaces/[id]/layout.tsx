@@ -1,28 +1,23 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import React from 'react';
+import { useRouter } from 'next/router';
 import Sidebar from '@/components/Sidebar';
-import Navbar from "@/components/Navbar";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "TaskHive",
-  description: "Task Management Solution",
-};
+import Navbar from '@/components/Navbar';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
-      <div className="flex w-full">
-        <Sidebar/>
-        <main className="flex-1">
+    <div className="flex flex-col w-full h-screen">
+      <Navbar />
+      <div className="flex flex-1">
+        <Sidebar  /> {/* Passing the workspaceId */}
+        <main className="flex-1 p-6">
           {children}
         </main>
       </div>
-    
- 
+    </div>
   );
 }

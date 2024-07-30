@@ -3,7 +3,12 @@ import React, { useState } from "react";
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { FiAlignLeft } from "react-icons/fi";
 import Taskbutton from "@/components/Taskbutton";
+import { useEffect } from "react";
 
+import { useAppDispatch, useAppSelector } from "../../../redux/lib/hooks";
+import { useParams, useRouter } from "next/navigation";
+import { checkAuth } from "@/redux/features/userSlice";
+import { FaSpinner } from "react-icons/fa";
 type Task = {
     id: string;
     title: string;
@@ -28,7 +33,42 @@ const columns = ["todo", "inprogress", "review", "done"];
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
+    const dispatch = useAppDispatch();
+const {id}=useParams();
+// useEffect(()=>{
+// async function fetchtasks=()=>{
+//     try{
+//         const response=await fetch(`http://localhost:8000/:workspaceId/${id}/taska`,{
+//             credentials:"include"
+//         })
+//         if(!response.ok){
+//             throw new Error("Failed to fetch tasks")
+//         }
+//         const data=await response.json();
+//         setTasks(data.tasks)
+//     }catch{
+//         console.error("Error fetching tasks")
+//     }
+// }
+// fetchtasks();
+// },[tasks]);
+// console.log(tasks)
+    const router = useRouter();
+    const { isAuthenticated, user, loading, error } = useAppSelector(
+      (state) => state.user
+    );
+   
+    useEffect(() => {
+        dispatch(checkAuth());
+      
+      }, [dispatch]);
+  
+    useEffect(() => {
+      if (isAuthenticated === false) {
+        router.push("/auth");
+      }
+    }, [isAuthenticated, router]);
+  
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
         if (over && active.id !== over.id) {
@@ -60,6 +100,8 @@ function Column({ id, tasks }: { id: string; tasks: Task[] }) {
         id,
     });
 
+    
+    
     return (
         <div ref={setNodeRef} className="w-full md:w-1/4 p-4">
             <div className="flex items-center justify-between mb-2">
@@ -71,7 +113,7 @@ function Column({ id, tasks }: { id: string; tasks: Task[] }) {
                     <TaskCard task={task} />
                 </Draggable>
             ))}
-            <Taskbutton />
+            <Taskbutton colid={id} />
         </div>
     );
 }

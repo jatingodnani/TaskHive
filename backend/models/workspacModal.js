@@ -23,6 +23,7 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     enum: ['Low', 'Medium', 'Urgent']
   },
+  columns: { type: String,default:"todo" },
   deadline: { type: Date },
   workspace: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'userDetail', required: true },
