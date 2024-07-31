@@ -5,12 +5,14 @@ import { FiAlignLeft, FiX } from 'react-icons/fi';
 import Select from 'react-select';
 import { PiUserFill } from 'react-icons/pi';
 import { useAppSelector } from '@/redux/lib/hooks';
+import { useRouter } from 'next/navigation';
 
 
 const Workform = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { users } = useAppSelector((state) => state.authusers);
+  const router=useRouter()
   const [formState, setFormState] = useState({
     name: "",
     description: "",
@@ -37,9 +39,11 @@ const Workform = () => {
 
       if (response.ok) {
         setShowModal(false);
+        router.push("/")
       } else {
         console.error('Error:', data.message);
       }
+
     } catch (error) {
       console.error('Error:', error);
     } finally {

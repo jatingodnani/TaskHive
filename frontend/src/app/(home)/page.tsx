@@ -5,7 +5,7 @@ import { checkAuth, clearUser } from "../../redux/features/userSlice";
 import { useRouter } from "next/navigation";
 import { FaUserCircle, FaSignOutAlt, FaSpinner } from "react-icons/fa";
 import { fetchUsers } from "@/redux/features/authuser";
-import WorkspacesPage from "@/components/Worspacesshow.tsx";
+import WorkspacesPage from "../../components/Worspacesshow";
 
 const AuthStatus: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +23,7 @@ const AuthStatus: React.FC = () => {
 
   useEffect(() => {
     dispatch(checkAuth());
-    dispatch(fetchUsers())
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   if (loading || isAuthenticated === undefined) {

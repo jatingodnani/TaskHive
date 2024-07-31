@@ -12,14 +12,33 @@ import { clearUser } from '@/redux/features/userSlice';
 const Navbar = () => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [allcworkspce,setWorkspaces]=useState([])
   const { user } = useAppSelector((state) => state.user);
   const router = useRouter();
   const dispatch=useAppDispatch();
   const toggleWorkspaceMenu = () => setIsWorkspaceOpen(!isWorkspaceOpen);
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/taskhive/workspaces', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        console.log(response)
+        const data = await response.json();
+        console.log(data)
+        setWorkspaces(data);
+      } catch (error) {
+        console.error('Error fetching workspaces:', error);
+      }
+    };
+
+    fetchWorkspaces();
+  }, []);
 
   const handleLogout = async () => {
-    console.log("hii")
+    
     try {
       const response = await fetch('http://localhost:8000/auth/logout', {
         method: 'GET',
@@ -43,9 +62,9 @@ const Navbar = () => {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      // initial={{ opacity: 0, y: -50 }}
+      // animate={{ opacity: 1, y: 0 }}
+      // transition={{ duration: 0.5 }}
       className="bg-white text-gray-800 p-6 shadow-md"
     >
       <div className="container mx-auto flex justify-between items-center">
@@ -58,7 +77,7 @@ const Navbar = () => {
               onClick={toggleWorkspaceMenu}
               className="px-5 py-2 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none flex items-center transition-colors"
             >
-              <FaBriefcase className="mr-2" />
+              <FaBriefcase className="mr-2 text-purple-500" />
               Workspaces
               <FaChevronDown className="ml-2" />
             </button>
@@ -69,13 +88,13 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
+                  className="absolute z-50 right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
                 >
-                  {[1, 2, 3].map((num) => (
-                    <motion.li key={num} whileHover={{ x: 5 }} className="border-b last:border-b-0">
-                      <Link href={`/workspace/${num}`} className="flex items-center px-4 py-3 hover:bg-gray-100">
+                  {allcworkspce.map((workspace) => (
+                    <motion.li key={workspace._id} whileHover={{ x: 5 }} className="border-b last:border-b-0">
+                      <Link href={`/workspaces/${workspace._id}`} className="flex items-center px-4 py-3 hover:bg-gray-100">
                         <FaBriefcase className="mr-3 text-blue-600" />
-                        Workspace {num}
+                        {workspace?.name}
                       </Link>
                     </motion.li>
                   ))}

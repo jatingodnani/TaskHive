@@ -1,10 +1,13 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { useParams } from 'next/navigation';
+import { FaSpinner } from 'react-icons/fa';
 
 interface User {
   _id: string;
   name: string;
+  fullname: string;
 }
 
 interface Activity {
@@ -25,47 +28,54 @@ const actionTypeColors = {
 
 const ActivityHistory: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams();
 
   useEffect(() => {
-    // Fetch activities from your API here
-    // For now, we'll use mock data
-    const mockActivities: Activity[] = [
-      {
-        _id: '1',
-        user: { _id: 'u1', name: 'John Doe' },
-        actionType: 'CREATE_WORKSPACE',
-        details: { name: 'New Workspace' },
-        createdAt: new Date().toISOString(),
-      },
-      {
-        _id: '2',
-        user: { _id: 'u2', name: 'Jane Smith' },
-        actionType: 'CREATE_TASK',
-        details: { title: 'New Task' },
-        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-      },
-      // Add more mock activities as needed
-    ];
+    const fetchActivities = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/taskhive/activities/${id}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        console.log(response);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-    setActivities(mockActivities);
-  }, []);
+        const data = await response.json();
+        setActivities(data);
+      } catch (err) {
+        setError('Failed to fetch activities');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchActivities();
+  }, [id]);
 
   const getActionDescription = (activity: Activity) => {
+    console.log(activity);
     switch (activity.actionType) {
       case 'CREATE_WORKSPACE':
-        return `created workspace "${activity.details.name}"`;
+        return `created workspace "${activity.details.workspaceTitle}"`;
       case 'DELETE_WORKSPACE':
-        return `deleted workspace "${activity.details.name}"`;
+        return `deleted workspace "${activity.details.workspaceTitle}"`;
       case 'CREATE_TASK':
-        return `created task "${activity.details.title}"`;
+        return `created task "${activity.details.taskTitle}"`;
       case 'UPDATE_TASK':
-        return `updated task "${activity.details.title}"`;
+        return `updated task "${activity.details.taskTitle}"`;
       case 'DELETE_TASK':
-        return `deleted task "${activity.details.title}"`;
+        return `deleted task "${activity.details.taskTitle}"`;
       default:
         return 'performed an action';
     }
   };
+
+  if (loading) return <div className='w-full h-full flex justify-center items-center'><FaSpinner size={20} className='animate-spin'/></div>
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="h-full w-full flex justify-center p-4">
@@ -73,6 +83,7 @@ const ActivityHistory: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Activity History</h2>
         
         <div className="space-y-4 max-h-[600px] overflow-y-auto">
+          {activities.length === 0 && <p>No activities found.</p>}
           {activities.map((activity) => (
             <div key={activity._id} className="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg">
               <div className={`${actionTypeColors[activity.actionType]} text-white text-xs font-bold px-2 py-1 rounded`}>
@@ -80,7 +91,7 @@ const ActivityHistory: React.FC = () => {
               </div>
               <div className="flex-grow">
                 <p className="text-gray-800">
-                  <span className="font-semibold">{activity.user.name}</span>
+                  <span className="font-semibold">{activity.user.fullname}</span>
                   {' '}
                   {getActionDescription(activity)}
                 </p>

@@ -17,7 +17,7 @@ const Auth = () => {
           router.push("/")
         }
       },[isAuthenticated,user])
-     console.log("auth",isAuthenticated)
+    
     const toggleForm = () => {
         setIsSignIn(!isSignIn);
     };

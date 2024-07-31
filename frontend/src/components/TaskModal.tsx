@@ -54,7 +54,7 @@ const Modal = ({ colid, id, showModal, setShowModal, loading }) => {
 
   const handleSubmit = async (e, formData) => {
     e.preventDefault();
-console.log(formData);;
+
     try {
       const response = await fetch('http://localhost:8000/taskhive/tasks', {
         method: 'POST',

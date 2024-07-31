@@ -27,6 +27,7 @@ const Taskbutton = ({colid}) => {
       >
         <span>Create Task</span> <FaPlus size={20}/>
       </button>
+      
       <Modal id={params?.id} colid={colid} showModal={showModal} setShowModal={setShowModal} handleSubmit={handleSubmit} loading={loading} />
     </div>
   );
