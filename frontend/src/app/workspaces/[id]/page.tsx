@@ -200,8 +200,9 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
     return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
   };
 
-  const handleDelete = async (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const handleDelete = async (e: React.MouseEvent<SVGElement, MouseEvent>, id: string) => {
     console.log("hlo")
+    e.stopPropagation();
     
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
