@@ -23,7 +23,7 @@ export const checkAuth = createAsyncThunk(
   "user/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const token =await localStorage.getItem("authTokenhive");
+      const token =localStorage.getItem("authTokenhive");
       const response = await fetch("https://taskhive-y97a.onrender.com/auth/check-auth", {
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),

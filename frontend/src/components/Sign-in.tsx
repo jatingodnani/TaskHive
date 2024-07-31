@@ -32,14 +32,11 @@ const SignInForm = () => {
       const raw = JSON.stringify(values);
 
       try {
-        // Retrieve the token from localStorage
-        const token = localStorage.getItem("authTokenhive");
-
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }), // Add token if it exists
+
           },
           body: raw,
           redirect: "follow",
@@ -51,7 +48,6 @@ const SignInForm = () => {
           throw new Error(result.error || "Something went wrong");
         }
 
-        // Store the token in localStorage
         localStorage.setItem("authTokenhive", result.token);
 
         toast.success("Signed in successfully!");

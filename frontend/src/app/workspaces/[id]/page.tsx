@@ -202,7 +202,7 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
 
   const handleDelete = async (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     console.log("hlo")
-    e.ev
+    
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         const authToken = localStorage.getItem("authTokenhive");
