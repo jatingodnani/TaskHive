@@ -37,8 +37,7 @@ router.post('/signin', async (req, res) => {
     return res
       .cookie('task-token', token, {
         httpOnly: true,
-        sameSite: 'none',
-        secure:true,
+        sameSite: 'none'
       })
       .json({ success: true, token });
   } catch (err) {
