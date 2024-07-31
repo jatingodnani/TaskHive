@@ -30,7 +30,7 @@ const WorkspaceMembers: React.FC = () => {
     (state) => state.user
   );
   const router = useRouter();
-  
+
   useEffect(() => {
     dispatch(checkAuth());
     dispatch(fetchUsers());
@@ -44,7 +44,7 @@ const WorkspaceMembers: React.FC = () => {
     const fetchMembers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/taskhive/workspaces/${id}`,
+          `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`,
           {
             method: "GET",
             credentials: "include",
@@ -81,7 +81,7 @@ const WorkspaceMembers: React.FC = () => {
     try {
       const memberIds = selectedUsers.map((user) => user.value);
       const response = await fetch(
-        `http://localhost:8000/taskhive/workspaces/${id}/members`,
+        `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}/members`,
         {
           method: "PATCH",
           headers: {

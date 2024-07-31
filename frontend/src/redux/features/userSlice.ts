@@ -23,7 +23,7 @@ export const checkAuth = createAsyncThunk(
   "user/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:8000/auth/check-auth", {
+      const response = await fetch("https://taskhive-y97a.onrender.com/auth/check-auth", {
         credentials: "include",
       });
       const data = await response.json();

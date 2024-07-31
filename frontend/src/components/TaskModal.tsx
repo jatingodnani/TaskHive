@@ -51,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
 
   useEffect(() => {
     if (showModal) {
-      fetch(`http://localhost:8000/taskhive/workspaces/${id}`, {
+      fetch(`https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`, {
         credentials: "include",
       })
         .then((response) => response.json())
@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/taskhive/tasks", {
+      const response = await fetch("https://taskhive-y97a.onrender.com/taskhive/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -25,7 +25,7 @@ const SignInForm = () => {
     onSubmit: async (values) => {
       setLoading(true);
 
-      const url = "https://task-hive-beta.vercel.app/auth/signin";
+      const url = "https://taskhive-y97a.onrender.com/auth/signin";
       const raw = JSON.stringify(values);
 
       try {
@@ -33,8 +33,7 @@ const SignInForm = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: raw,
-          redirect: "follow",
-          credentials: "include",
+          redirect: "follow"
         });
         const result = await response.json();
 

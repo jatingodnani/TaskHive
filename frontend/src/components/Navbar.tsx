@@ -44,7 +44,7 @@ const Navbar = () => {
     const fetchWorkspaces = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/taskhive/workspaces",
+          "https://taskhive-y97a.onrender.com/taskhive/workspaces",
           {
             method: "GET",
             credentials: "include",
@@ -64,7 +64,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8000/auth/logout", {
+      const response = await fetch("https://taskhive-y97a.onrender.com/auth/logout", {
         method: "GET",
         credentials: "include",
       });

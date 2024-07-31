@@ -21,7 +21,7 @@ const initialState: UserState = {
 
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await fetch('http://localhost:8000/taskhive/auth-users',{
+  const response = await fetch('https://taskhive-y97a.onrender.com/taskhive/auth-users',{
     credentials: "include",
   });
 

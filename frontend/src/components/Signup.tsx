@@ -24,7 +24,7 @@ const SignUpForm: React.FC = () => {
     },
     validationSchema,
     onSubmit: async (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
-      const url = 'http://localhost:8000/auth/signup';
+      const url = 'https://taskhive-y97a.onrender.com/auth/signup';
       const raw = JSON.stringify(values);
 
       const requestOptions: RequestInit = {

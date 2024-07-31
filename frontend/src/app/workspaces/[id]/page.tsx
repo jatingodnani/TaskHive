@@ -38,7 +38,7 @@ let handleTaskUpdate = async (
   console.log(updates);
   try {
     const response = await fetch(
-      `http://localhost:8000/taskhive/tasks/${taskId}`,
+      `https://taskhive-y97a.onrender.com/taskhive/tasks/${taskId}`,
       {
         method: "PUT",
         headers: {
@@ -84,7 +84,7 @@ function App() {
     async function fetchTasks() {
       try {
         const response = await fetch(
-          `http://localhost:8000/taskhive/workspaces/${id}/tasks`,
+          `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}/tasks`,
           {
             credentials: "include",
           }
@@ -187,7 +187,7 @@ interface Task {
   deadline: string;
 }
 
-const TaskCard: React.FC<{ task: Task,settas: React.Dispatch<React.SetStateAction<any[]>>,tasks: Task[]}> = ({ task,settas,tasks }) => {
+const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateAction<any[]>>, tasks: Task[] }> = ({ task, settas, tasks }) => {
   const priorityColors: { [key in Task["priority"]]: string } = {
     Low: "bg-green-500",
     Medium: "bg-yellow-500",
@@ -208,7 +208,7 @@ const TaskCard: React.FC<{ task: Task,settas: React.Dispatch<React.SetStateActio
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         const response = await fetch(
-          `http://localhost:8000/taskhive/tasks/${id}`,
+          `https://taskhive-y97a.onrender.com/taskhive/tasks/${id}`,
           {
             method: "DELETE",
             credentials: "include",
@@ -233,9 +233,8 @@ const TaskCard: React.FC<{ task: Task,settas: React.Dispatch<React.SetStateActio
       <p className="text-sm text-gray-600 mb-3">{task.description}</p>
       <div className="flex justify-between items-center">
         <span
-          className={`text-xs font-bold px-2 py-1 rounded-full text-white ${
-            priorityColors[task.priority]
-          }`}
+          className={`text-xs font-bold px-2 py-1 rounded-full text-white ${priorityColors[task.priority]
+            }`}
         >
           {task.priority}
         </span>
@@ -268,9 +267,9 @@ function Draggable({
     });
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        marginBottom: "10px",
-      }
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      marginBottom: "10px",
+    }
     : { marginBottom: "10px" };
 
   return (

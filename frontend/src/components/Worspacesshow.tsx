@@ -49,7 +49,7 @@ const WorkspacesPage: React.FC = () => {
     const fetchWorkspaces = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/taskhive/workspaces",
+          "https://taskhive-y97a.onrender.com/taskhive/workspaces",
           {
             method: "GET",
             credentials: "include",
@@ -80,11 +80,11 @@ const WorkspacesPage: React.FC = () => {
         workspaces.length > 0 && <h1 className="text-start text-gray-500 ml-4 p-4 text-4xl tracking-[0.1rem] font-medium">All WorkSpaces!!</h1>
       }
       <div className="flex flex-wrap p-6 bg-gray-100 w-full">
-      {workspaces.length === 0 ? (
+        {workspaces.length === 0 ? (
           <div className="flex items-center justify-center w-full">
             <p>No workspaces found.</p>
           </div>
-        ) :(
+        ) : (
           workspaces.map((workspace) => (
             <WorkspaceCard
               key={workspace._id}
@@ -95,7 +95,7 @@ const WorkspacesPage: React.FC = () => {
             />
 
           ))
-          
+
         )}
       </div>
     </div>
@@ -117,11 +117,10 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
       <p className="text-gray-600 mb-4">{description}</p>
       <div className="flex justify-center self-start">
         <span
-          className={`py-1 px-3 text-xs rounded-md font-medium text-white transition-colors ${
-            isCollaborated
+          className={`py-1 px-3 text-xs rounded-md font-medium text-white transition-colors ${isCollaborated
               ? "bg-green-500 hover:bg-green-600"
               : "bg-blue-500 hover:bg-blue-600"
-          }`}
+            }`}
         >
           {isCollaborated ? "Public" : "Private"}
         </span>

@@ -38,9 +38,9 @@ const ActivityHistory: React.FC = () => {
   const { isAuthenticated, user } = useAppSelector(
     (state) => state.user
   );
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  
+
   useEffect(() => {
     dispatch(checkAuth());
     dispatch(fetchUsers());
@@ -53,7 +53,7 @@ const ActivityHistory: React.FC = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/taskhive/activities/${id}`, {
+        const response = await fetch(`https://taskhive-y97a.onrender.com/taskhive/activities/${id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -92,14 +92,14 @@ const ActivityHistory: React.FC = () => {
     }
   };
 
-  if (loading) return <div className='w-full h-full flex justify-center items-center'><FaSpinner size={20} className='animate-spin'/></div>
+  if (loading) return <div className='w-full h-full flex justify-center items-center'><FaSpinner size={20} className='animate-spin' /></div>
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="h-full w-full flex justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Activity History</h2>
-        
+
         <div className="space-y-4 max-h-[600px] overflow-y-auto">
           {activities.length === 0 && <p>No activities found.</p>}
           {activities.map((activity) => (

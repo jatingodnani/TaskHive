@@ -33,13 +33,12 @@ router.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
     const token = await User.matchpassword(email, password);
-    console.log(token, 'hii bsdk');
-
+    
     return res
       .cookie('task-token', token, {
         httpOnly: true,
-        sameSite: 'lax',
-        secure: false,
+        sameSite: 'none',
+        secure:true,
       })
       .json({ success: true, token });
   } catch (err) {

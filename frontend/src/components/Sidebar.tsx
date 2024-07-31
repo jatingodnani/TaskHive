@@ -16,7 +16,7 @@ interface NavItem {
 }
 
 interface User {
-  
+
   id: string;
   name: string;
   // Add other properties as needed
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
   const handleDeleteWorkspace = async () => {
     if (window.confirm('Are you sure you want to delete this workspace?')) {
       try {
-        const response = await fetch(`http://localhost:8000/taskhive/workspaces/${id}`, {
+        const response = await fetch(`https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`, {
           method: 'DELETE',
           credentials: 'include'
         });
@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
         if (!response.ok) {
           throw new Error('Failed to delete workspace');
         }
-        
+
         router.push('/');
       } catch (error) {
         console.error('Error deleting workspace:', error);
@@ -63,8 +63,8 @@ const Sidebar: React.FC = () => {
           <ul className="space-y-2">
             {navItems.map((item, index) => (
               <li key={index}>
-                <Link 
-                  href={item.href} 
+                <Link
+                  href={item.href}
                   className="flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors duration-150"
                 >
                   <item.icon className="mr-3 text-gray-400" />
