@@ -39,8 +39,11 @@
 - **Backend:**
   - **Express:** A web application framework for Node.js, used to build RESTful APIs.
   - **MongoDB:** A NoSQL database for storing and managing application data.
-## Getting Started
+##![Screenshot (45)](https://github.com/user-attachments/assets/6567610c-2c9d-4f5d-8e76-40a80070638d)
 
+![Scree![Screenshot (43)](https://github.com/user-attachments/assets/c1a4d4ac-cd37-41bd-9710-d619fd767b66)
+nshot (42)](https://github.com/user-attachments/assets/e15acbc5-05ac-49f2-b6b9-161b1e90a3f9)
+ Getting Started
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/your-username/taskhive.git
