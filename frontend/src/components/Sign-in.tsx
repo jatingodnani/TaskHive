@@ -1,10 +1,12 @@
 "use client";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { LuLoader } from "react-icons/lu";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+
 const validationSchema = yup.object({
   email: yup
     .string()
@@ -15,7 +17,8 @@ const validationSchema = yup.object({
 
 const SignInForm = () => {
   const [loading, setLoading] = useState(false);
-  const router=useRouter()
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -29,22 +32,32 @@ const SignInForm = () => {
       const raw = JSON.stringify(values);
 
       try {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem("authTokenhive");
+
         const response = await fetch(url, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }), // Add token if it exists
+          },
           body: raw,
-          redirect: "follow"
+          redirect: "follow",
         });
+
         const result = await response.json();
-         
+
         if (!response.ok) {
           throw new Error(result.error || "Something went wrong");
         }
 
+        // Store the token in localStorage
+        localStorage.setItem("authTokenhive", result.token);
+
         toast.success("Signed in successfully!");
-        router.push("/")
+        router.push("/");
         formik.resetForm();
-        
+
       } catch (error: any) {
         toast.error(error.message || "Something went wrong");
       } finally {

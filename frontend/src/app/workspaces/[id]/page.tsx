@@ -37,12 +37,14 @@ let handleTaskUpdate = async (
 ): Promise<void> => {
   console.log(updates);
   try {
+    const authToken = localStorage.getItem("authTokenhive");
     const response = await fetch(
       `https://taskhive-y97a.onrender.com/taskhive/tasks/${taskId}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
         },
         body: JSON.stringify(updates),
         credentials: "include",
@@ -83,10 +85,14 @@ function App() {
   useEffect(() => {
     async function fetchTasks() {
       try {
+        const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(
           `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}/tasks`,
           {
             credentials: "include",
+            headers: {
+              "Authorization": `Bearer ${authToken}`,
+            },
           }
         );
         if (!response.ok) {
@@ -178,15 +184,6 @@ function Column({
   );
 }
 
-interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  priority: "Low" | "Medium" | "High" | "Urgent";
-  createdAt: string;
-  deadline: string;
-}
-
 const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateAction<any[]>>, tasks: Task[] }> = ({ task, settas, tasks }) => {
   const priorityColors: { [key in Task["priority"]]: string } = {
     Low: "bg-green-500",
@@ -203,15 +200,20 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
     return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     console.log("hlo")
+    e.ev
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
+        const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(
           `https://taskhive-y97a.onrender.com/taskhive/tasks/${id}`,
           {
             method: "DELETE",
             credentials: "include",
+            headers: {
+              "Authorization": `Bearer ${authToken}`,
+            },
           }
         );
         settas(tasks.filter((task) => task._id !== id));
@@ -247,7 +249,7 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
       </p>
       <MdDelete
         size={40}
-        onClick={() => handleDelete(task._id)}
+        onClick={(e) => handleDelete(e, task._id)}
         className="absolute top-2 right-2 text-red-500 px-2 py-1 rounded-md transition-colors duration-200 cursor-pointer"
       />
     </div>

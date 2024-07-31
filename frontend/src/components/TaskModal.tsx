@@ -34,7 +34,7 @@ interface FormData {
   description: string;
   assignedTo: string[];
   workspaceMembers: WorkspaceMember[];
-  favoured?: boolean; // Add favoured property here
+  favoured?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModal, loading }) => {
@@ -46,15 +46,24 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
     description: "",
     assignedTo: [],
     workspaceMembers: [],
-    favoured: false, // Initialize favoured property
+    favoured: false,
   });
 
   useEffect(() => {
     if (showModal) {
+      const authToken = localStorage.getItem("authTokenhive");
       fetch(`https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`, {
         credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${authToken}`,
+        },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch workspace members');
+          }
+          return response.json();
+        })
         .then((data) => {
           setFormData((prevData) => ({
             ...prevData,
@@ -82,14 +91,16 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, formData: FormData) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
+      const authToken = localStorage.getItem("authTokenhive");
       const response = await fetch("https://taskhive-y97a.onrender.com/taskhive/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           title: formData.title,
@@ -100,18 +111,16 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
           workspace: id,
           assignedTo: formData.assignedTo,
           columns: colid,
-        }),
-        credentials: "include",
+        })
       });
-      console.log(response, colid);
+
       if (!response.ok) {
         throw new Error("Failed to create task");
       }
 
       const task = await response.json();
-      console.log("Task created:", task);
-      setShowModal(false);
       settas((prev) => [task, ...prev]);
+      setShowModal(false);
     } catch (error) {
       console.error("Error creating task:", error);
     }
@@ -142,7 +151,7 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
             onClick={() => setShowModal(false)}
           />
         </div>
-        <form onSubmit={(e) => handleSubmit(e, formData)} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-2">
             <input
               name="title"
@@ -154,7 +163,7 @@ const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModa
             />
           </div>
           <div className="flex justify-start gap-4 w-full items-center">
-            {loading ? <FiLoader size={20} className="animate-spin" /> : null}
+            {loading && <FiLoader size={20} className="animate-spin" />}
             <label className="font-bold">Status</label>
             <FiTag size={20} />
             <select

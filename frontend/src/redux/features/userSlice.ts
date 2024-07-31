@@ -23,14 +23,17 @@ export const checkAuth = createAsyncThunk(
   "user/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("authTokenhive");
       const response = await fetch("https://taskhive-y97a.onrender.com/auth/check-auth", {
-        credentials: "include",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
       });
       const data = await response.json();
       console.log(data);
       return data;
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      return rejectWithValue(error.message || "An error occurred");
     }
   }
 );
@@ -59,13 +62,12 @@ const userSlice = createSlice({
         state.isAuthenticated = action.payload.authenticated;
         state.user = action.payload.user || null;
         state.error = null;
-        console.log(state.isAuthenticated);
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
         state.user = null;
-        state.error = action.error.message || "An error occurred";
+        state.error = action.payload as string || "An error occurred";
       });
   },
 });

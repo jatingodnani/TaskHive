@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
@@ -6,7 +6,6 @@ import { FaSpinner } from 'react-icons/fa';
 import { useAppDispatch, useAppSelector } from '@/redux/lib/hooks';
 import { checkAuth } from '@/redux/features/userSlice';
 import { fetchUsers } from '@/redux/features/authuser';
-
 
 interface User {
   _id: string;
@@ -45,19 +44,25 @@ const ActivityHistory: React.FC = () => {
     dispatch(checkAuth());
     dispatch(fetchUsers());
   }, [dispatch]);
+
   useEffect(() => {
     if (isAuthenticated === false) {
       router.push("/auth");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
+
   useEffect(() => {
     const fetchActivities = async () => {
       try {
+        const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(`https://taskhive-y97a.onrender.com/taskhive/activities/${id}`, {
           method: 'GET',
+          headers: {
+            "Authorization": `Bearer ${authToken}`,
+          },
           credentials: 'include',
         });
-        console.log(response);
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -75,7 +80,6 @@ const ActivityHistory: React.FC = () => {
   }, [id]);
 
   const getActionDescription = (activity: Activity) => {
-    console.log(activity);
     switch (activity.actionType) {
       case 'CREATE_WORKSPACE':
         return `created workspace "${activity.details.workspaceTitle}"`;

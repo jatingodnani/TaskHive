@@ -43,11 +43,15 @@ const Navbar = () => {
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
+        const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(
           "https://taskhive-y97a.onrender.com/taskhive/workspaces",
           {
             method: "GET",
             credentials: "include",
+            headers: {
+              "Authorization": `Bearer ${authToken}`,
+            },
           }
         );
         console.log(response);
@@ -62,25 +66,25 @@ const Navbar = () => {
     fetchWorkspaces();
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      const response = await fetch("https://taskhive-y97a.onrender.com/auth/logout", {
-        method: "GET",
-        credentials: "include",
-      });
 
-      if (!response.ok) {
-        throw new Error("Failed to log out");
-      }
+      localStorage.removeItem("authTokenhive");
 
-      await response.json();
+
       dispatch(clearUser());
+
+
       toast.success("Successfully logged out");
+
+
       router.push("/auth");
     } catch (err) {
+      // Display error message
       toast.error("Error logging out");
     }
   };
+
 
   return (
     <motion.header className="bg-white text-gray-800 p-6 shadow-md">

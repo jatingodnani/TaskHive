@@ -19,7 +19,7 @@ interface User {
 
   id: string;
   name: string;
-  // Add other properties as needed
+
 }
 
 
@@ -37,11 +37,15 @@ const Sidebar: React.FC = () => {
   ];
 
   const handleDeleteWorkspace = async () => {
+    const token = localStorage.getItem('authTokenhive');
     if (window.confirm('Are you sure you want to delete this workspace?')) {
       try {
         const response = await fetch(`https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`, {
           method: 'DELETE',
-          credentials: 'include'
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {

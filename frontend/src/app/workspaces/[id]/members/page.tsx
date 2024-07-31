@@ -35,18 +35,24 @@ const WorkspaceMembers: React.FC = () => {
     dispatch(checkAuth());
     dispatch(fetchUsers());
   }, [dispatch]);
+
   useEffect(() => {
     if (isAuthenticated === false) {
       router.push("/auth");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
+
   useEffect(() => {
     const fetchMembers = async () => {
       try {
+        const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(
           `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}`,
           {
             method: "GET",
+            headers: {
+              "Authorization": `Bearer ${authToken}`,
+            },
             credentials: "include",
           }
         );
@@ -80,12 +86,14 @@ const WorkspaceMembers: React.FC = () => {
   const handleAddMembers = async () => {
     try {
       const memberIds = selectedUsers.map((user) => user.value);
+      const authToken = localStorage.getItem("authTokenhive");
       const response = await fetch(
         `https://taskhive-y97a.onrender.com/taskhive/workspaces/${id}/members`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
           },
           credentials: "include",
           body: JSON.stringify({ memberIds }),

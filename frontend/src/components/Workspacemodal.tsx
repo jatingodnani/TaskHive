@@ -35,8 +35,9 @@ const Workform: React.FC = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     setLoading(true);
+
+    const token = localStorage.getItem('authTokenhive');
 
     try {
       const response = await fetch(
@@ -45,9 +46,9 @@ const Workform: React.FC = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
           body: JSON.stringify(formState),
-          credentials: "include",
         }
       );
 

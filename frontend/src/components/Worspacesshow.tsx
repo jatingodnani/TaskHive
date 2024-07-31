@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import CardList from "./Card";
 import image1 from "../../public/images/image1.svg";
 import image2 from "../../public/images/image2.svg";
-import image3 from "../../public/images/imaage3.svg";
+import image3 from "../../public/images/image3.svg";
 
 interface Workspace {
   _id: string;
@@ -48,11 +48,16 @@ const WorkspacesPage: React.FC = () => {
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
+
+        const token = localStorage.getItem("authTokenhive");
+
         const response = await fetch(
           "https://taskhive-y97a.onrender.com/taskhive/workspaces",
           {
             method: "GET",
-            credentials: "include",
+            headers: {
+              ...(token && { Authorization: `Bearer ${token}` }),
+            },
           }
         );
 
@@ -93,9 +98,7 @@ const WorkspacesPage: React.FC = () => {
               description={workspace.description}
               isCollaborated={workspace.members.length > 0}
             />
-
           ))
-
         )}
       </div>
     </div>
@@ -118,8 +121,8 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
       <div className="flex justify-center self-start">
         <span
           className={`py-1 px-3 text-xs rounded-md font-medium text-white transition-colors ${isCollaborated
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-blue-500 hover:bg-blue-600"
+            ? "bg-green-500 hover:bg-green-600"
+            : "bg-blue-500 hover:bg-blue-600"
             }`}
         >
           {isCollaborated ? "Public" : "Private"}

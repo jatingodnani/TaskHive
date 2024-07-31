@@ -1,28 +1,31 @@
-// features/userSlice.ts
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// types.ts
+
+
 export interface User {
-    _id: string;
-    email: string;
-    fullname:string;
-  }
-  
-  export interface UserState {
-    users: User[];
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
-  }
-  
+  _id: string;
+  email: string;
+  fullname: string;
+}
+
+export interface UserState {
+  users: User[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
 const initialState: UserState = {
   users: [],
   status: 'idle',
   error: null,
 };
 
-
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await fetch('https://taskhive-y97a.onrender.com/taskhive/auth-users',{
-    credentials: "include",
+  const token = localStorage.getItem('authTokenhive');
+  const response = await fetch('https://taskhive-y97a.onrender.com/taskhive/auth-users', {
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
   });
 
   if (!response.ok) {
@@ -44,7 +47,7 @@ const userSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.users = action.payload;
-        console.log(state.users)
+        console.log(state.users);
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = 'failed';
