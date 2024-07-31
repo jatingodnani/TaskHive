@@ -21,7 +21,8 @@ const initialState: UserState = {
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const token = localStorage.getItem('authTokenhive');
+  const token = await localStorage.getItem('authTokenhive');
+  console.log(token)
   const response = await fetch('https://taskhive-y97a.onrender.com/taskhive/auth-users', {
     headers: {
       ...(token && { Authorization: `Bearer ${token}` }),
