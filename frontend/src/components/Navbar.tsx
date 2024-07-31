@@ -1,36 +1,44 @@
 "use client";
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaUser, FaSignOutAlt, FaBriefcase } from 'react-icons/fa';
-import { useAppSelector,useAppDispatch } from '@/redux/lib/hooks';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-import { clearUser } from '@/redux/features/userSlice';
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaChevronDown,
+  FaUser,
+  FaSignOutAlt,
+  FaBriefcase,
+} from "react-icons/fa";
+import { useAppSelector, useAppDispatch } from "@/redux/lib/hooks";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { clearUser } from "@/redux/features/userSlice";
 
 const Navbar = () => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [allcworkspce,setWorkspaces]=useState([])
+  const [allcworkspce, setWorkspaces] = useState([]);
   const { user } = useAppSelector((state) => state.user);
   const router = useRouter();
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
   const toggleWorkspaceMenu = () => setIsWorkspaceOpen(!isWorkspaceOpen);
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
-        const response = await fetch('http://localhost:8000/taskhive/workspaces', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        console.log(response)
+        const response = await fetch(
+          "http://localhost:8000/taskhive/workspaces",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+        console.log(response);
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setWorkspaces(data);
       } catch (error) {
-        console.error('Error fetching workspaces:', error);
+        console.error("Error fetching workspaces:", error);
       }
     };
 
@@ -38,25 +46,23 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
-    
     try {
-      const response = await fetch('http://localhost:8000/auth/logout', {
-        method: 'GET',
-        credentials: 'include', // Ensure cookies are sent if needed
+      const response = await fetch("http://localhost:8000/auth/logout", {
+        method: "GET",
+        credentials: "include", // Ensure cookies are sent if needed
       });
 
       if (!response.ok) {
-        throw new Error('Failed to log out');
+        throw new Error("Failed to log out");
       }
 
       const result = await response.json();
-      dispatch(clearUser())
-        toast.success('Successfully logged out');
-        // Redirect to the login page
-        router.push('/auth');
-      
+      dispatch(clearUser());
+      toast.success("Successfully logged out");
+      // Redirect to the login page
+      router.push("/auth");
     } catch (err) {
-      toast.error('Error logging out');
+      toast.error("Error logging out");
     }
   };
 
@@ -67,8 +73,11 @@ const Navbar = () => {
       // transition={{ duration: 0.5 }}
       className="bg-white text-gray-800 p-6 shadow-md"
     >
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-purple-500 hover:text-purple-500 transition-colors">
+      <div className="w-full flex justify-between items-center">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-purple-500 hover:text-purple-500 transition-colors"
+        >
           TaskHive
         </Link>
         <div className="flex items-center space-x-6">
@@ -88,11 +97,18 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute z-50 right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
+                  className="absolute z-40 right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
                 >
                   {allcworkspce.map((workspace) => (
-                    <motion.li key={workspace._id} whileHover={{ x: 5 }} className="border-b last:border-b-0">
-                      <Link href={`/workspaces/${workspace._id}`} className="flex items-center px-4 py-3 hover:bg-gray-100">
+                    <motion.li
+                      key={workspace._id}
+                      whileHover={{ x: 5 }}
+                      className="border-b last:border-b-0"
+                    >
+                      <Link
+                        href={`/workspaces/${workspace._id}`}
+                        className="flex items-center px-4 py-3 hover:bg-gray-100"
+                      >
                         <FaBriefcase className="mr-3 text-blue-600" />
                         {workspace?.name}
                       </Link>
@@ -108,7 +124,7 @@ const Navbar = () => {
               className="flex items-center space-x-3 px-4 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 focus:outline-none transition-colors"
             >
               <FaUser />
-              <span>{user?.name || 'User'}</span>
+              <span>{user?.name || "User"}</span>
               <FaChevronDown />
             </button>
             <AnimatePresence>
@@ -118,9 +134,12 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
+                  className="absolute right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56 z-40"
                 >
-                  <motion.div whileHover={{ x: 5 }} className="px-4 py-3 border-b">
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="px-4 py-3 border-b"
+                  >
                     <p className="font-semibold">{user?.name}</p>
                     <p className="text-sm text-gray-600">{user?.email}</p>
                   </motion.div>

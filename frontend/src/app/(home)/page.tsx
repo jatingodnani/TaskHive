@@ -16,7 +16,7 @@ const AuthStatus: React.FC = () => {
   );
 
   useEffect(() => {
-    if (isAuthenticated === false) {
+    if (!loading && isAuthenticated === false) {
       router.push("/auth");
     }
   }, [isAuthenticated, router]);
@@ -28,9 +28,9 @@ const AuthStatus: React.FC = () => {
 
   if (loading || isAuthenticated === undefined) {
     return (
-      <div className="flex flex-col items-center justify-center p-6 bg-gray-50 border border-gray-200 rounded-md max-w-sm mx-auto">
+      <div className="flex flex-col items-center justify-center p-6 bg-gray-50 border border-gray-200 rounded-md self-stretch flex-1">
         <FaSpinner className="text-blue-500 animate-spin text-3xl" />
-        <p className="mt-4 text-lg text-gray-700">Checking authentication status...</p>
+        <p className="mt-4 text-lg text-gray-700">Loading...</p>
       </div>
     );
   }
@@ -47,9 +47,7 @@ const AuthStatus: React.FC = () => {
     return null;
   }
 
-  return (
-   <WorkspacesPage/>
-  );
+  return <WorkspacesPage />;
 };
 
 export default AuthStatus;

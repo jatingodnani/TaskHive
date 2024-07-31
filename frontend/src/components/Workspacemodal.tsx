@@ -1,51 +1,51 @@
 "use client";
-import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { FiAlignLeft, FiX } from 'react-icons/fi';
-import Select from 'react-select';
-import { PiUserFill } from 'react-icons/pi';
-import { useAppSelector } from '@/redux/lib/hooks';
-import { useRouter } from 'next/navigation';
-
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { FiAlignLeft, FiX } from "react-icons/fi";
+import Select from "react-select";
+import { PiUserFill } from "react-icons/pi";
+import { useAppSelector } from "@/redux/lib/hooks";
+import { useRouter } from "next/navigation";
 
 const Workform = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { users } = useAppSelector((state) => state.authusers);
-  const router=useRouter()
+  const router = useRouter();
   const [formState, setFormState] = useState({
     name: "",
     description: "",
-    members: []
+    members: [],
   });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/taskhive/workspaces', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-         
-        },
-        body: JSON.stringify(formState),
-        credentials:"include",
-      });
+      const response = await fetch(
+        "http://localhost:8000/taskhive/workspaces",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formState),
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
       console.log(data);
 
       if (response.ok) {
         setShowModal(false);
-        router.push("/")
+        router.push("/");
       } else {
-        console.error('Error:', data.message);
+        console.error("Error:", data.message);
       }
-
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -57,7 +57,7 @@ const Workform = () => {
         onClick={() => setShowModal(true)}
         className="bg-purple-500 flex gap-2 items-center text-white font-bold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-200 ease-in-out"
       >
-        <FaPlus className="mr-2" /> Create Workspace
+        <FaPlus className="" /> Create Workspace
       </button>
       <WorkspaceModal
         showModal={showModal}
@@ -72,19 +72,27 @@ const Workform = () => {
   );
 };
 
-const WorkspaceModal = ({ showModal, setShowModal, handleSubmit, loading, formState, setFormState, users }) => {
+const WorkspaceModal = ({
+  showModal,
+  setShowModal,
+  handleSubmit,
+  loading,
+  formState,
+  setFormState,
+  users,
+}) => {
   const handleChange = (selectedOptions) => {
-    setFormState(prevState => ({
+    setFormState((prevState) => ({
       ...prevState,
-      members: selectedOptions.map(option => option.value)
+      members: selectedOptions.map((option) => option.value),
     }));
   };
 
   if (!showModal) return null;
 
-  const userOptions = users.map(user => ({
+  const userOptions = users.map((user) => ({
     value: user._id,
-    label: user.email
+    label: user.email,
   }));
 
   return (
@@ -103,7 +111,9 @@ const WorkspaceModal = ({ showModal, setShowModal, handleSubmit, loading, formSt
               placeholder="Workspace Name"
               className="text-2xl font-bold w-full border-0 focus:outline-none border-b-2 border-gray-200 pb-2"
               value={formState.name}
-              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              onChange={(e) =>
+                setFormState({ ...formState, name: e.target.value })
+              }
               required
             />
           </div>
@@ -115,7 +125,9 @@ const WorkspaceModal = ({ showModal, setShowModal, handleSubmit, loading, formSt
             placeholder="Description"
             className="w-full bg-white border border-gray-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 ease-in-out"
             value={formState.description}
-            onChange={(e) => setFormState({ ...formState, description: e.target.value })}
+            onChange={(e) =>
+              setFormState({ ...formState, description: e.target.value })
+            }
           ></textarea>
           <div className="flex justify-start gap-4 w-full items-center">
             <label className="font-bold">Add members</label>
@@ -125,7 +137,9 @@ const WorkspaceModal = ({ showModal, setShowModal, handleSubmit, loading, formSt
             isMulti
             name="members"
             options={userOptions}
-            value={userOptions.filter(option => formState.members.includes(option.value))}
+            value={userOptions.filter((option) =>
+              formState.members.includes(option.value)
+            )}
             onChange={handleChange}
             className="basic-multi-select"
             classNamePrefix="select"
