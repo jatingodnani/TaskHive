@@ -61,15 +61,17 @@ let handleTaskUpdate = async (
     console.error(error);
   }
 };
+
 const columns = ["todo", "inprogress", "review", "done"];
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const [activeDrag, setActiveDrag] = useState(0);
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const router = useRouter();
-  const { isAuthenticated, user, loading, error } = useAppSelector(
+  const { isAuthenticated, user, loading: authLoading, error } = useAppSelector(
     (state) => state.user
   );
 
@@ -82,8 +84,10 @@ function App() {
       router.push("/auth");
     }
   }, [isAuthenticated, router]);
+
   useEffect(() => {
     async function fetchTasks() {
+      setLoading(true); // Set loading to true when starting fetch
       try {
         const authToken = localStorage.getItem("authTokenhive");
         const response = await fetch(
@@ -102,6 +106,8 @@ function App() {
         setTasks(data);
       } catch (error) {
         console.error("Error fetching tasks", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetch completes
       }
     }
     fetchTasks();
@@ -116,9 +122,9 @@ function App() {
           task._id === active.id ? { ...task, columns: over.id } : task
         )
       );
-      console.log(tasks);
+     
       const task = tasks.find((task) => task._id === active.id);
-      console.log(task);
+    
       if (task) {
         try {
           await handleTaskUpdate(task._id, task);
@@ -129,9 +135,8 @@ function App() {
       }
     }
   };
-  const handleDragStart = (event: any) => {
-    console.log(event.active.id, "HERE");
 
+  const handleDragStart = (event: any) => {
     setActiveDrag(event.active.id);
   };
 
@@ -139,7 +144,7 @@ function App() {
     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div className="p-6 w-full">
         <div className="w-full bg-white flex flex-wrap justify-center rounded-md p-4">
-          {columns.map((column, index) => (
+          {columns.map((column) => (
             <Column
               key={column}
               id={column}
@@ -148,6 +153,18 @@ function App() {
             />
           ))}
         </div>
+        {loading ? (
+          <div className="flex items-center justify-center w-full h-full mt-8">
+            <FaSpinner className="animate-spin text-gray-500" size={24} />
+            <p className="ml-2 text-gray-500">Loading tasks...</p>
+          </div>
+        ) : (
+          tasks.length === 0 && (
+            <div className="flex items-center justify-center w-full h-full mt-8">
+              <p>No tasks right now.</p>
+            </div>
+          )
+        )}
       </div>
     </DndContext>
   );
@@ -203,7 +220,8 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
   const handleDelete = async (e: React.MouseEvent<SVGElement, MouseEvent>, id: string) => {
     console.log("hlo")
     e.stopPropagation();
-    
+    e.preventDefault();
+   
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         const authToken = localStorage.getItem("authTokenhive");
@@ -252,6 +270,7 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
         size={40}
         onClick={(e) => handleDelete(e, task._id)}
         className="absolute top-2 right-2 text-red-500 px-2 py-1 rounded-md transition-colors duration-200 cursor-pointer"
+        data-delete-button="true"
       />
     </div>
   );
