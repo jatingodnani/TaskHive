@@ -4,7 +4,7 @@ import { FaStar } from 'react-icons/fa';
 import { FiLoader, FiTag, FiClock, FiClipboard, FiAlignLeft, FiX, FiStar } from 'react-icons/fi';
 import { PiUserFill } from 'react-icons/pi';
 
-const Modal = ({ colid, id, showModal, setShowModal, loading }) => {
+const Modal = ({ colid,settas, id, showModal, setShowModal, loading }) => {
   const [formData, setFormData] = useState({
     title: '',
     status: '',
@@ -80,7 +80,8 @@ const Modal = ({ colid, id, showModal, setShowModal, loading }) => {
 
       const task = await response.json();
       console.log('Task created:', task);
-      setShowModal(false); // Close the modal on success
+      setShowModal(false); 
+      settas(prev=>[task,...prev])// Close the modal on success
     } catch (error) {
       console.error('Error creating task:', error);
     }

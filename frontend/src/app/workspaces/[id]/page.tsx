@@ -61,7 +61,19 @@ function App() {
     const dispatch = useAppDispatch();
     const { id } = useParams();
     const router = useRouter();
+    const { isAuthenticated, user, loading, error } = useAppSelector(
+        (state) => state.user
+    );
 
+    useEffect(() => {
+        dispatch(checkAuth());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (isAuthenticated === false) {
+            router.push("/auth");
+        }
+    }, [isAuthenticated, router]);
     useEffect(() => {
         async function fetchTasks() {
             try {
@@ -80,19 +92,7 @@ function App() {
         fetchTasks();
     }, [id]);
 
-    const { isAuthenticated, user, loading, error } = useAppSelector(
-        (state) => state.user
-    );
-
-    useEffect(() => {
-        dispatch(checkAuth());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (isAuthenticated === false) {
-            router.push("/auth");
-        }
-    }, [isAuthenticated, router]);
+   
 
     const handleDragEnd =async (event: any) => {
         const { active, over } = event;
@@ -125,6 +125,7 @@ function App() {
                             key={column}
                             id={column}
                             tasks={tasks?.filter((task) => task.columns === column)}
+                            settas={setTasks}
                             
                         />
                     ))}
@@ -134,7 +135,7 @@ function App() {
     );
 }
 
-function Column({ id, tasks }: { id: string; tasks: Task[] }) {
+function Column({ id, tasks,settas }: { id: string; tasks: Task[] }) {
     const { setNodeRef, isOver } = useDroppable({
         id,
     });
@@ -146,11 +147,11 @@ function Column({ id, tasks }: { id: string; tasks: Task[] }) {
                 <FiAlignLeft className="text-gray-500" size={20} />
             </div>
             {tasks?.map((task) => (
-                <Draggable key={task._id} id={task._id}>
+                <Draggable key={task._id} id={task._id} >
                     <TaskCard task={task} />
                 </Draggable>
             ))}
-            <Taskbutton colid={id} />
+            <Taskbutton colid={id} settas={settas} />
         </div>
     );
 }

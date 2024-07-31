@@ -4,7 +4,7 @@ import Modal from "./TaskModal";
 import { FaPlus } from 'react-icons/fa';
 import { useParams } from 'next/navigation';
 
-const Taskbutton = ({colid}) => {
+const Taskbutton = ({colid,settas}) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const params = useParams<{ tag: string; item: string }>()
@@ -28,7 +28,7 @@ const Taskbutton = ({colid}) => {
         <span>Create Task</span> <FaPlus size={20}/>
       </button>
       
-      <Modal id={params?.id} colid={colid} showModal={showModal} setShowModal={setShowModal} handleSubmit={handleSubmit} loading={loading} />
+      <Modal id={params?.id} settas={settas}colid={colid} showModal={showModal} setShowModal={setShowModal} handleSubmit={handleSubmit} loading={loading} />
     </div>
   );
 };
