@@ -6,7 +6,7 @@ const {
 
 const router = Router();
 
-router.get('/check-auth', authenticatiionCheck('task-token'), (req, res) => {
+router.get('/check-auth', authenticatiionCheck(), (req, res) => {
   console.log('RESPONSE IS ', { authenticated: true, user: req.user });
   if (req.user) {
     return res.json({ authenticated: true, user: req.user });
@@ -34,13 +34,7 @@ router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
     const token = await User.matchpassword(email, password);
     
-    return res
-      .cookie('task-token', token, {
-        httpOnly: true,
-        sameSite: 'none',
-        secure:true,
-      })
-      .json({ success: true, token });
+    return res.json({ success: true, token });
   } catch (err) {
     return res.status(401).json({ error: 'Incorrect email or password' });
   }

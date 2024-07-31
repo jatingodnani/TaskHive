@@ -16,7 +16,7 @@ app.use(cors({ origin: "https://task-hive-rfg2.vercel.app", credentials: true })
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/auth', router);
-app.use(authenticatiionCheck('task-token'));
+app.use(authenticatiionCheck());
 app.use('/taskhive', worktask);
 app.use((err, req, res, next) => {
   console.error(err.stack);
