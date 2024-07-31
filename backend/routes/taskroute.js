@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Workspace, Task, Activity } = require('../models/workspacModal'); 
 const User = require('../models/authModal');
+const mongoose = require('mongoose');
 router.get("/auth-users",async(req, res, next)=>{
   
   try{
@@ -35,6 +36,7 @@ router.post('/workspaces', async (req, res) => {
   }
 });
 router.get('/workspaces/:id',async (req,res)=>{
+  console.log(req.params.id);
   try{
     const workspace=await Workspace.findById(req.params.id).populate("owner","name email").populate("members","name email");
     if(!workspace){
@@ -135,11 +137,14 @@ router.get('/tasks/:id', async (req, res) => {
 //update
 router.put('/tasks/:id', async (req, res) => {
   try {
-    const { title, description, status, priority, deadline, assignedTo } = req.body;
+    const { title, description, status, priority, deadline, assignedTo,columns } = req.body;
+    
     const task = await Task.findByIdAndUpdate(req.params.id,
-      { title, description, status, priority, deadline, assignedTo },
+      { title, description, status, priority, deadline, assignedTo,columns },
       { new: true }
     );
+    
+
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
@@ -180,5 +185,54 @@ router.delete('/tasks/:id', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+router.get('/activities/:workspaceId', async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
 
+    console.log(workspaceId);
+    if (!mongoose.Types.ObjectId.isValid(workspaceId)) {
+      return res.status(400).json({ message: 'Invalid workspace ID' });
+    }
+
+    
+    const activities = await Activity.find({ workspace: workspaceId })
+      .populate('user', 'fullname email')
+      .populate('taskId', 'title')
+      .sort({ createdAt: -1 });
+
+    res.json(activities);
+  } catch (error) {
+    console.error('Error fetching activities:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+router.patch('/workspaces/:id/members', async (req, res) => {
+  const { id } = req.params;
+  const { memberIds } = req.body;
+
+  try {
+   
+    if (!memberIds || !Array.isArray(memberIds) || memberIds.some(id => !mongoose.Types.ObjectId.isValid(id))) {
+      return res.status(400).json({ message: 'Invalid member IDs' });
+    }
+    const workspace = await Workspace.findById(id);
+    if (!workspace) {
+      return res.status(404).json({ message: 'Workspace not found' });
+    }
+    const users = await User.find({ _id: { $in: memberIds } });
+    if (users.length !== memberIds.length) {
+      return res.status(404).json({ message: 'Some users not found' });
+    }
+    workspace.members = [...new Set([...workspace.members, ...memberIds])];
+    workspace.updatedAt = new Date();
+
+    await workspace.save();
+    const updatedWorkspace = await Workspace.findById(id).populate('members', 'name email');
+
+    res.status(200).json(updatedWorkspace);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 module.exports = router;

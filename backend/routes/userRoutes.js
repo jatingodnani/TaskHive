@@ -38,7 +38,6 @@ router.post('/signin', async (req, res) => {
     return res
       .cookie('task-token', token, {
         httpOnly: true,
-        maxAge: 3600000,
         sameSite: 'lax',
         secure: false,
       })
@@ -52,5 +51,6 @@ router.get('/logout', (req, res) => {
   res.clearCookie('task-token');
    return res.json({ message: 'Logged out successfully' });
 });
+
 
 module.exports = router;
