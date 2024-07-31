@@ -2,24 +2,40 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { FiAlignLeft, FiX } from "react-icons/fi";
-import Select from "react-select";
+import Select, { MultiValue } from "react-select";
 import { PiUserFill } from "react-icons/pi";
 import { useAppSelector } from "@/redux/lib/hooks";
 import { useRouter } from "next/navigation";
 
-const Workform = () => {
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+interface User {
+  _id: string;
+  email: string;
+}
+
+interface FormState {
+  name: string;
+  description: string;
+  members: string[];
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+const Workform: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const { users } = useAppSelector((state) => state.authusers);
   const router = useRouter();
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<FormState>({
     name: "",
     description: "",
     members: [],
   });
 
-  const handleSubmit = async (e) => {
-    // e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
 
     try {
@@ -72,7 +88,17 @@ const Workform = () => {
   );
 };
 
-const WorkspaceModal = ({
+interface WorkspaceModalProps {
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  loading: boolean;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  users: User[];
+}
+
+const WorkspaceModal: React.FC<WorkspaceModalProps> = ({
   showModal,
   setShowModal,
   handleSubmit,
@@ -81,7 +107,7 @@ const WorkspaceModal = ({
   setFormState,
   users,
 }) => {
-  const handleChange = (selectedOptions) => {
+  const handleChange = (selectedOptions: MultiValue<SelectOption>) => {
     setFormState((prevState) => ({
       ...prevState,
       members: selectedOptions.map((option) => option.value),

@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
+type User = {
+  email: string;
+  name: string;
+};
+
 type UserState = {
-  user: {
-    email: string;
-    name: string;
-  } | null;
+  user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -37,7 +39,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<string>) {
+    setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
       state.isAuthenticated = true;
     },

@@ -25,7 +25,7 @@ const SignInForm = () => {
     onSubmit: async (values) => {
       setLoading(true);
 
-      const url = "http://localhost:8000/auth/signin";
+      const url = "https://task-hive-beta.vercel.app/auth/signin";
       const raw = JSON.stringify(values);
 
       try {
@@ -43,8 +43,9 @@ const SignInForm = () => {
         }
 
         toast.success("Signed in successfully!");
-        formik.resetForm();
         router.push("/")
+        formik.resetForm();
+        
       } catch (error: any) {
         toast.error(error.message || "Something went wrong");
       } finally {

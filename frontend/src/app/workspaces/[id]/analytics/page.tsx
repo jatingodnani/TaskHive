@@ -1,8 +1,12 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { FaSpinner } from 'react-icons/fa';
+import { useAppDispatch, useAppSelector } from '@/redux/lib/hooks';
+import { checkAuth } from '@/redux/features/userSlice';
+import { fetchUsers } from '@/redux/features/authuser';
+
 
 interface User {
   _id: string;
@@ -31,7 +35,21 @@ const ActivityHistory: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams();
-
+  const { isAuthenticated, user } = useAppSelector(
+    (state) => state.user
+  );
+  const dispatch=useAppDispatch();
+  const router = useRouter();
+  
+  useEffect(() => {
+    dispatch(checkAuth());
+    dispatch(fetchUsers());
+  }, [dispatch]);
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push("/auth");
+    }
+  }, [isAuthenticated]);
   useEffect(() => {
     const fetchActivities = async () => {
       try {

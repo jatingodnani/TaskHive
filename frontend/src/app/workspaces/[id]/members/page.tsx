@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/lib/hooks";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
 import Select, { MultiValue } from "react-select";
 import { fetchUsers } from "@/redux/features/authuser";
+import { checkAuth } from "@/redux/features/userSlice";
 
 interface Member {
   id: string;
@@ -25,11 +26,20 @@ const WorkspaceMembers: React.FC = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams(); // Assumed 'id' to be the workspaceId
   const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([]);
-
+  const { isAuthenticated, user } = useAppSelector(
+    (state) => state.user
+  );
+  const router = useRouter();
+  
   useEffect(() => {
+    dispatch(checkAuth());
     dispatch(fetchUsers());
   }, [dispatch]);
-
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.push("/auth");
+    }
+  }, [isAuthenticated]);
   useEffect(() => {
     const fetchMembers = async () => {
       try {

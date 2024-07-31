@@ -170,7 +170,7 @@ function Column({
       </div>
       {tasks?.map((task) => (
         <Draggable key={task._id} id={task._id}>
-          <TaskCard task={task} />
+          <TaskCard task={task} settas={settas} tasks={tasks} />
         </Draggable>
       ))}
       <Taskbutton colid={id} settas={settas} />
@@ -187,7 +187,7 @@ interface Task {
   deadline: string;
 }
 
-const TaskCard: React.FC<{ task: Task }> = ({ task }) => {
+const TaskCard: React.FC<{ task: Task,settas: React.Dispatch<React.SetStateAction<any[]>>,tasks: Task[]}> = ({ task,settas,tasks }) => {
   const priorityColors: { [key in Task["priority"]]: string } = {
     Low: "bg-green-500",
     Medium: "bg-yellow-500",
@@ -204,6 +204,7 @@ const TaskCard: React.FC<{ task: Task }> = ({ task }) => {
   };
 
   const handleDelete = async (id: string) => {
+    console.log("hlo")
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         const response = await fetch(
@@ -213,7 +214,8 @@ const TaskCard: React.FC<{ task: Task }> = ({ task }) => {
             credentials: "include",
           }
         );
-
+        settas(tasks.filter((task) => task._id !== id));
+        console.log(tasks)
         if (!response.ok) {
           throw new Error("Failed to delete task");
         }

@@ -19,14 +19,14 @@ const AuthStatus: React.FC = () => {
     if (!loading && isAuthenticated === false) {
       router.push("/auth");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     dispatch(checkAuth());
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  if (loading || isAuthenticated === undefined) {
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center p-6 bg-gray-50 border border-gray-200 rounded-md self-stretch flex-1">
         <FaSpinner className="text-blue-500 animate-spin text-3xl" />

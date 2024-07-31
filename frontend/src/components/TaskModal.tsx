@@ -12,8 +12,33 @@ import {
 } from "react-icons/fi";
 import { PiUserFill } from "react-icons/pi";
 
-const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
-  const [formData, setFormData] = useState({
+interface ModalProps {
+  colid: string;
+  settas: React.Dispatch<React.SetStateAction<any[]>>;
+  id: string;
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+}
+
+interface WorkspaceMember {
+  id: string;
+  name: string;
+}
+
+interface FormData {
+  title: string;
+  status: string;
+  priority: string;
+  deadline: string;
+  description: string;
+  assignedTo: string[];
+  workspaceMembers: WorkspaceMember[];
+  favoured?: boolean; // Add favoured property here
+}
+
+const Modal: React.FC<ModalProps> = ({ colid, settas, id, showModal, setShowModal, loading }) => {
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     status: "",
     priority: "",
@@ -21,6 +46,7 @@ const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
     description: "",
     assignedTo: [],
     workspaceMembers: [],
+    favoured: false, // Initialize favoured property
   });
 
   useEffect(() => {
@@ -41,7 +67,7 @@ const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
     }
   }, [showModal, id]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -49,20 +75,14 @@ const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
     }));
   };
 
-  const handleMemberChange = (selectedMembers) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      assignedTo: selectedMembers,
-    }));
-  };
-
   const toggleFavoured = () => {
     setFormData((prevData) => ({
       ...prevData,
+      favoured: !prevData.favoured,
     }));
   };
 
-  const handleSubmit = async (e, formData) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, formData: FormData) => {
     e.preventDefault();
 
     try {
@@ -77,9 +97,9 @@ const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
           status: formData.status,
           priority: formData.priority,
           deadline: formData.deadline,
-          workspace: id, // workspace id
+          workspace: id,
           assignedTo: formData.assignedTo,
-          columns: colid, // column id
+          columns: colid,
         }),
         credentials: "include",
       });
@@ -91,7 +111,7 @@ const Modal = ({ colid, settas, id, showModal, setShowModal, loading }) => {
       const task = await response.json();
       console.log("Task created:", task);
       setShowModal(false);
-      settas((prev) => [task, ...prev]); // Close the modal on success
+      settas((prev) => [task, ...prev]);
     } catch (error) {
       console.error("Error creating task:", error);
     }

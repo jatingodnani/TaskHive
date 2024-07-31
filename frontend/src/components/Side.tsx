@@ -7,25 +7,40 @@ import {
   FaCog,
   FaChartBar,
   FaClipboard,
-  FaPlus,
   FaUser,
 } from "react-icons/fa";
-import Workform from "./Workspacemodal.tsx";
+import { IconType } from "react-icons";
+import Workform from "./Workspacemodal";
 import { useAppSelector } from "../redux/lib/hooks";
-const SideCompo = () => {
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon:IconType;
+}
+
+interface User {
+  name: string;
+
+}
+
+
+const SideCompo: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
+
+  const navItems: NavItem[] = [
+    { href: "/", icon: FaHome, label: "Home" },
+    { href: "/", icon: FaClipboard, label: "Board" },
+    { href: "/", icon: FaChartBar, label: "Analytics" },
+    { href: "/", icon: FaCog, label: "Settings" },
+  ];
 
   return (
     <div className="w-64 bg-white h-screen shadow-lg flex flex-col overflow-y-auto">
       <div className="p-5 flex-grow">
         <nav>
           <ul className="space-y-2">
-            {[
-              { href: "/", icon: FaHome, label: "Home" },
-              { href: "/", icon: FaClipboard, label: "Board" },
-              { href: "/", icon: FaChartBar, label: "Analytics" },
-              { href: "/", icon: FaCog, label: "Settings" },
-            ].map((item, index) => (
+            {navItems.map((item, index) => (
               <li key={index}>
                 <Link
                   href={item.href}

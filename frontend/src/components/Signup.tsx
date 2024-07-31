@@ -1,6 +1,13 @@
-import { useFormik } from 'formik';
+import React from 'react';
+import { useFormik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+
+interface FormValues {
+  fullname: string;
+  email: string;
+  password: string;
+}
 
 const validationSchema = yup.object({
   fullname: yup.string().required('Full name is required'),
@@ -8,19 +15,19 @@ const validationSchema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-const SignUpForm = () => {
-  const formik = useFormik({
+const SignUpForm: React.FC = () => {
+  const formik = useFormik<FormValues>({
     initialValues: {
       fullname: '',
       email: '',
       password: '',
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
       const url = 'http://localhost:8000/auth/signup';
       const raw = JSON.stringify(values);
 
-      const requestOptions = {
+      const requestOptions: RequestInit = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: raw,
@@ -36,9 +43,13 @@ const SignUpForm = () => {
         }
 
         toast.success('Signed up successfully!');
-        formik.resetForm();
-      } catch (error: any) {
-        toast.error(error.message || 'Something went wrong');
+        resetForm();
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          toast.error(error.message || 'Something went wrong');
+        } else {
+          toast.error('An unknown error occurred');
+        }
       }
     },
   });

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaChevronDown,
@@ -14,15 +13,33 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { clearUser } from "@/redux/features/userSlice";
 
+interface Workspace {
+  _id: string;
+  name: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+}
+
+interface RootState {
+  user: {
+    user: User | null;
+  };
+}
+
 const Navbar = () => {
-  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [allcworkspce, setWorkspaces] = useState([]);
-  const { user } = useAppSelector((state) => state.user);
+  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState<boolean>(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+  const [allWorkspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const { user } = useAppSelector((state: RootState) => state.user);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const toggleWorkspaceMenu = () => setIsWorkspaceOpen(!isWorkspaceOpen);
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
+
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
@@ -34,7 +51,7 @@ const Navbar = () => {
           }
         );
         console.log(response);
-        const data = await response.json();
+        const data: Workspace[] = await response.json();
         console.log(data);
         setWorkspaces(data);
       } catch (error) {
@@ -49,17 +66,16 @@ const Navbar = () => {
     try {
       const response = await fetch("http://localhost:8000/auth/logout", {
         method: "GET",
-        credentials: "include", // Ensure cookies are sent if needed
+        credentials: "include",
       });
 
       if (!response.ok) {
         throw new Error("Failed to log out");
       }
 
-      const result = await response.json();
+      await response.json();
       dispatch(clearUser());
       toast.success("Successfully logged out");
-      // Redirect to the login page
       router.push("/auth");
     } catch (err) {
       toast.error("Error logging out");
@@ -67,12 +83,7 @@ const Navbar = () => {
   };
 
   return (
-    <motion.header
-      // initial={{ opacity: 0, y: -50 }}
-      // animate={{ opacity: 1, y: 0 }}
-      // transition={{ duration: 0.5 }}
-      className="bg-white text-gray-800 p-6 shadow-md"
-    >
+    <motion.header className="bg-white text-gray-800 p-6 shadow-md">
       <div className="w-full flex justify-between items-center">
         <Link
           href="/"
@@ -99,7 +110,7 @@ const Navbar = () => {
                   transition={{ duration: 0.3 }}
                   className="absolute z-40 right-0 mt-2 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg w-56"
                 >
-                  {allcworkspce.map((workspace) => (
+                  {allWorkspaces.map((workspace) => (
                     <motion.li
                       key={workspace._id}
                       whileHover={{ x: 5 }}
@@ -110,7 +121,7 @@ const Navbar = () => {
                         className="flex items-center px-4 py-3 hover:bg-gray-100"
                       >
                         <FaBriefcase className="mr-3 text-blue-600" />
-                        {workspace?.name}
+                        {workspace.name}
                       </Link>
                     </motion.li>
                   ))}
