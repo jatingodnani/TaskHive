@@ -35,7 +35,7 @@
 - **Frontend:**
   - **Next.js:** A React framework for server-side rendering and static site generation.
   - **Tailwind CSS:** A utility-first CSS framework for designing responsive and modern UI components.
-
+   - **ReduxToolkit** For statemangement.
 - **Backend:**
   - **Express:** A web application framework for Node.js, used to build RESTful APIs.
   - **MongoDB:** A NoSQL database for storing and managing application data.
