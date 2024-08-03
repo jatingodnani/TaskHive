@@ -35,7 +35,7 @@ let handleTaskUpdate = async (
   taskId: string,
   updates: TaskUpdate
 ): Promise<void> => {
-  console.log(updates);
+
   try {
     const authToken = localStorage.getItem("authTokenhive");
     const response = await fetch(
@@ -122,9 +122,9 @@ function App() {
           task._id === active.id ? { ...task, columns: over.id } : task
         )
       );
-     
+
       const task = tasks.find((task) => task._id === active.id);
-    
+
       if (task) {
         try {
           await handleTaskUpdate(task._id, task);
@@ -221,7 +221,7 @@ const TaskCard: React.FC<{ task: Task, settas: React.Dispatch<React.SetStateActi
     console.log("hlo")
     e.stopPropagation();
     e.preventDefault();
-   
+
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         const authToken = localStorage.getItem("authTokenhive");
@@ -293,7 +293,14 @@ function Draggable({
       marginBottom: "10px",
     }
     : { marginBottom: "10px" };
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('[data-delete-button="true"]')) {
 
+      return;
+    }
+
+    listeners.onMouseDown(e as any);
+  };
   return (
     <div
       ref={setNodeRef}
@@ -309,6 +316,8 @@ function Draggable({
       }}
       {...listeners}
       {...attributes}
+      onMouseDown={handleMouseDown}
+      onTouchStart={listeners.onTouchStart}
     >
       {children}
     </div>
