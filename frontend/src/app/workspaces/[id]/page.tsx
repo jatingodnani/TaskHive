@@ -293,14 +293,6 @@ function Draggable({
       marginBottom: "10px",
     }
     : { marginBottom: "10px" };
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest('[data-delete-button="true"]')) {
-
-      return;
-    }
-
-    listeners.onMouseDown(e as any);
-  };
   return (
     <div
       ref={setNodeRef}
@@ -316,8 +308,7 @@ function Draggable({
       }}
       {...listeners}
       {...attributes}
-      onMouseDown={handleMouseDown}
-      onTouchStart={listeners.onTouchStart}
+     
     >
       {children}
     </div>
