@@ -72,9 +72,9 @@ const Workform: React.FC = () => {
     <div className="flex flex-col items-center justify-center h-screen">
       <button
         onClick={() => setShowModal(true)}
-        className="bg-purple-500 flex gap-2 items-center text-white font-bold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-200 ease-in-out"
+        className="bg-purple-500 flex gap-2 ml-2 items-center text-white font-bold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-200 ease-in-out"
       >
-        <FaPlus className="" /> Create Workspace
+        <FaPlus className="" /> <span className="hidden sm:block">Create Workspace</span>
       </button>
       <WorkspaceModal
         showModal={showModal}

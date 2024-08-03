@@ -61,10 +61,10 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="w-64 bg-white h-screen shadow-lg flex flex-col overflow-y-auto">
+    <div className="w-32 md:w-64 bg-white h-screen shadow-lg flex flex-col overflow-y-auto">
       <div className="p-5 flex-col">
-        <nav>
-          <ul className="space-y-2">
+        <nav className=''>
+          <ul className="space-y-2 flex-col items-center sm:items-start">
             {navItems.map((item, index) => (
               <li key={index}>
                 <Link
@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
                   className="flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors duration-150"
                 >
                   <item.icon className="mr-3 text-gray-400" />
-                  {item.label}
+                  <span className=' hidden sm:block'>{item.label}</span>
                 </Link>
               </li>
             ))}
@@ -84,7 +84,7 @@ const Sidebar: React.FC = () => {
         className='flex gap-2 w-[75%] font-bold rounded ml-2 p-2 justify-center items-center bg-red-600 text-white'
       >
         <MdDelete size={20} />
-        <span>Delete Workspace</span>
+        <span className='hidden sm:block'>Delete Workspace</span>
       </button>
     </div>
   );

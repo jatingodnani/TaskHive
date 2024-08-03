@@ -102,7 +102,7 @@ const Navbar = () => {
               className="px-5 py-2 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none flex items-center transition-colors"
             >
               <FaBriefcase className="mr-2 text-purple-500" />
-              Workspaces
+              <span className="hidden sm:block">Workspaces</span>
               <FaChevronDown className="ml-2" />
             </button>
             <AnimatePresence>
@@ -139,7 +139,7 @@ const Navbar = () => {
               className="flex items-center space-x-3 px-4 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 focus:outline-none transition-colors"
             >
               <FaUser />
-              <span>{user?.name || "User"}</span>
+              <span className="hidden sm:block">{user?.name || "User"}</span>
               <FaChevronDown />
             </button>
             <AnimatePresence>
