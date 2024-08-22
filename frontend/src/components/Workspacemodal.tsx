@@ -35,6 +35,7 @@ const Workform: React.FC = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
 
     const token = localStorage.getItem('authTokenhive');
