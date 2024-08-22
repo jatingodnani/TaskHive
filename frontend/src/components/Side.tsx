@@ -34,10 +34,10 @@ const SideCompo: React.FC = () => {
   ];
 
   return (
-    <div className="w-24  md:w-64 bg-white h-screen shadow-lg flex flex-col items-center md:items-start overflow-hidden">
-      <div className="p-5 flex-grow">
+    <div className="w-auto px-4  md:w-auto bg-white h-screen shadow-lg flex flex-col items-center md:items-start overflow-hidden">
+      {/* <div className="p-5 flex-grow"> */}
         <nav>
-          <ul className="space-y-2">
+          {/* <ul className="space-y-2">
             {navItems.map((item, index) => (
               <li key={index}>
                 <Link
@@ -45,13 +45,13 @@ const SideCompo: React.FC = () => {
                   className="flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors duration-150"
                 >
                   <item.icon className="mr-3 text-gray-400" />
-                  <span className="hidden md:inline">{item.label}</span> {/* Hide on mobile, show on md and above */}
+                  <span className="hidden md:inline">{item.label}</span> 
                 </Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </nav>
-      </div>
+      {/* </div> */}
       <Workform />
       <div className="border-t border-gray-200 p-4">
         <div className="flex items-center text-gray-600">
